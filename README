@@ -1,0 +1,12 @@
+SitemapGenerator
+================
+
+A Rails plugin that makes it very easy to generate sitemaps for your Rails app.
+
+
+Example
+=======
+
+script/plugin install git@github.com:christianhellsten/sitemap-generator.git
+
+Copyright (c) 2009 Christian Hellsten (Aktagon Ltd.), released under the MIT license
