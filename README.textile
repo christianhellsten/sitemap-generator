@@ -1,0 +1,131 @@
+h1. Rails Sitemap Generator
+
+The Rails Sitemap Generator plugin makes it very easy to generate sitemaps for your Rails app.
+
+In addition to simplifying sitemap creation the plugin also includes the following features:
+
+* Sitemap validation. A sitemap can contain about 50 000 items and be no more than x MB.
+* Search engine ping. The plugin notifies search engines each time your sitemap is updated.
+
+h2. Installation
+
+Installation is done with the script/plugin script:
+
+<pre>
+  <code>
+  $ script/plugin install  git://github.com/christianhellsten/sitemap-generator.git
+  </code>
+</pre>
+
+After installating the plugin you need to:
+
+* Configure the plugin (config/sitemap.yml)
+* Include a call to the *sitemap* method from each model you want to include in the sitemap
+
+h2. Configuring the plugin
+
+A configuration file (config/sitemap.yml) is automatically created by the installation script. 
+
+Below is a sample configuration file, which also contains the default values for the models:
+
+<pre>
+  <code>
+  domain: aktagon.com
+
+  limit: 5000
+  priority: 1
+  change_frequency: weekly
+  </code>
+</pre>
+
+The options:
+
+* domain: before using the sitemap generator you need to tell the plugin the domain where your application is deployed. This is because the sitemap must contain the full URL, not just the URI, of all resources.
+* limit: specifies how many model instances you want to include in the sitemap
+* priority: specifies the priority of the model
+* change_frequency: specifies how often the data changes: always, hourly, daily, weekly, monthly, yearly or never
+
+You can find a more comprehensive description of these concepts on the "Wikipedia page on sitemaps":http://en.wikipedia.org/wiki/Sitemaps
+
+h2. Configuring ActiveRecord models
+
+Each model you want included in the sitemap must call the *sitemap(options)* method.
+
+<pre>
+  <code>
+  class Post < ActiveRecord::Base
+    sitemap 
+  end
+  </code>
+</pre>
+
+The default options for each model are taken from the configuration file (config/sitemap.yml). You'll most likely want each model to have a different priority and change_frequency. The plugin allows you to override the default options as shown in this example:
+
+<pre>
+  <code>
+  class Post < ActiveRecord::Base
+    sitemap :change_frequency => :weekly, :limit => 1000, :priority => 0.5
+  end
+  </code>
+</pre>
+
+h2. Order
+
+The plugin will automatically order the data using the most appropriate Rails magic column, which is the first of the following columns it can find: updated_at, updated_on, created_at or created_on.
+
+You can override this behavior when calling the sitemap method:
+
+<pre>
+  <code>
+  class Post < ActiveRecord::Base
+    sitemap :order => 'points DESC'
+  end
+  </code>
+</pre>
+
+h2. Usage
+
+After configuring the plugin you can generate the sitemap with rake:
+
+<pre>
+  <code>
+  $ rake sitemap:generate
+  </code>
+</pre>
+
+You can also generate the sitemap programatically like this:
+
+<pre>
+  <code>
+  SitemapGenerator::Generator.run
+  </code>
+</pre>
+
+h2. Scheduled updates with cron
+
+Open the cron configuration with the following command:
+
+<pre>
+<code>
+$ sudo crontab -e
+</code>
+</pre>
+
+Add the following:
+
+<pre>
+<code>
+PATH=/usr/local/bin:/usr/bin:/bin
+SHELL=/bin/bash
+
+# m h  dom mon dow   command
+
+# Update the sitemap every day at 24:00
+
+00 00 * * * rake sitemap:generate
+</code>
+</pre>
+
+h2. Author
+
+"Christian Hellsten":http://christianhellsten.com ("Aktagon Ltd.":http://aktagon.com)
