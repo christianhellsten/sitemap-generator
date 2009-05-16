@@ -13,7 +13,7 @@ module SitemapGenerator
     def initialize(xml)
       @xml = xml
 
-      raise "!!!!domain is nil. You need specify a value for it in #{Options::CONFIG_FILE}" if Options.domain.nil?
+      raise "Sitemap !!!!domain is nil. You need specify a value for it in #{Options::CONFIG_FILE}" if Options.domain.nil?
 
 #      default_url_options[:domain] = Options.domain
     end
@@ -39,6 +39,8 @@ module SitemapGenerator
       if last_modified.nil?
         last_modified = model_instance.read_attribute(:created_on) || model_instance.read_attribute(:created_at)
       end
+
+      last_modified
     end
   end
 end
