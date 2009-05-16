@@ -4,7 +4,13 @@ namespace :sitemap do
 
   desc "Generates the sitemap"
   task :generate do
-    # TODO read configuration from a YAML file
+    require(File.join(RAILS_ROOT, 'config', 'environment'))
+
+    # Finds models and generates the sitemap
+    SitemapGenerator::Generator.run 
+    
+    # You can also generate a sitemap 'manually' like this:
+=begin
     SitemapGenerator::Generator.generate 'config' do |host, data|
       Post.all(:order => 'created_at desc', :limit => 5000).each do |post|
         data.add post, 0.7, :monthly
@@ -17,11 +23,8 @@ namespace :sitemap do
       Tag.all(:order => 'created_at desc', :limit => 5000).each do |tag|
         data.add tag, 0.5, :weekly
       end
-      
-      Brand.all(:order => 'created_at desc', :limit => 5000).each do |brand|
-        data.add brand, 0.7, :weekly
-      end
     end
+=end
   end
 
 end

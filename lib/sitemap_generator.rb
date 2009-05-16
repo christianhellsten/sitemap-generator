@@ -1,9 +1,6 @@
-ENV['RAILS_ENV'] ||= "development"  
-
-#require 'rubygems'
-#require 'config/environment'
-
 module SitemapGenerator
+  DOMAIN = nil
+
   module Version #:nodoc:
     Major = 0
     Minor = 1
