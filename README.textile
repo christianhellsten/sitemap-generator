@@ -17,7 +17,7 @@ Installation is done with the script/plugin script:
   </code>
 </pre>
 
-After installating the plugin you need to:
+After installing the plugin you need to:
 
 * Configure the plugin (config/sitemap.yml)
 * Include a call to the *sitemap* method from each model you want to include in the sitemap
@@ -122,7 +122,7 @@ SHELL=/bin/bash
 
 # Update the sitemap every day at 24:00
 
-00 00 * * * rake sitemap:generate
+00 00 * * * cd /var/www/xxx/current && RAILS_ENV=production rake sitemap:generate
 </code>
 </pre>
 
