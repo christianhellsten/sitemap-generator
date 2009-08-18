@@ -11,7 +11,11 @@ module SitemapGenerator
     end
 
     module ClassMethods
-      def sitemap(options = {})
+      def sitemap(options = {}, &block)
+
+        # Use a custom generator if given a block
+        options[:generator] = block if block_given?
+
         self.sitemap_options = options
       end
     end

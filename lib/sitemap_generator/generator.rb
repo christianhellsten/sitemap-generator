@@ -37,28 +37,40 @@ module SitemapGenerator
     end
 
     def find_models_and_generate
+      # TODO rename data to sitemap
       self.generate do |data|
         self.find_models.each do |model|
-          model_columns = model.columns.map(&:name)
-
           # Use defaults
           options = DEFAULT_OPTIONS.merge(model.sitemap_options)
 
-          # Find a column for ordering
-          if options[:order] == nil
-            order = ['updated_at', 'updated_on', 'created_at', 'created_on'].delete_if { |x| !model_columns.include?(x) }
-            options[:order] = "#{order.first} ASC"
-          end
+          # A user defined block that handles sitemap generation
+          custom_generator = options[:generator]
 
-          puts "Sitemap #{model} #{options.inspect}"
-
-          # This is where we create the sitemap. 
-          # Find and add model instances to the sitemap
-          model.all(:order => options[:order], :limit => options[:limit]).each do |o|
-            data.add o, options[:priority], options[:change_frequency]
+          if custom_generator
+            custom_generator.call(data.xml)
+          else
+            auto_generate(model, data, options)
           end
 
         end
+      end
+    end
+
+    def auto_generate(model, data, options)
+      model_columns = model.columns.map(&:name)
+
+      # Find a column for ordering
+      if options[:order] == nil
+        order = ['updated_at', 'updated_on', 'created_at', 'created_on'].delete_if { |x| !model_columns.include?(x) }
+        options[:order] = "#{order.first} ASC"
+      end
+
+      puts "Sitemap #{model} #{options.inspect}"
+
+      # This is where we create the sitemap. 
+      # Find and add model instances to the sitemap
+      model.all(:order => options[:order], :limit => options[:limit]).each do |o|
+        data.add o, options[:priority], options[:change_frequency]
       end
     end
 

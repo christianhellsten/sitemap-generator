@@ -1,5 +1,8 @@
+
+
 module SitemapGenerator
   class Sitemap
+    
     VALID_CHANGE_FREQ = [
       :always,
       :hourly,
@@ -9,6 +12,8 @@ module SitemapGenerator
       :yearly,
       :never
     ]
+
+    attr_accessor :xml
     
     def initialize(xml)
       @xml = xml
