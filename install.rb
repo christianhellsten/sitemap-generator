@@ -9,5 +9,9 @@ if !File.exist?(Options::CONFIG_FILE)
   end
 end
 
+if !File.exist?(Options::XML_STYLESHEET)
+  File.cp(File.dirname(__FILE__) + "/gss.xsl", Options::XML_STYLESHEET)
+end
+
 puts "SitemapGenerator installed."
 puts "NOTE: You need to specify the domain of your application in #{Options::CONFIG_FILE}"
