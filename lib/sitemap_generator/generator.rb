@@ -19,12 +19,13 @@ module SitemapGenerator
 
     def find_models
       models = []
-
-      files = Dir.glob(File.join(RAILS_ROOT, 'app', 'models', '*.rb')).delete_if {|c| c =~ /observer\.rb/ } #{|c| c < ActiveRecord::Base== false}
-
-      files.each do |file|
+      model_path = File.join(RAILS_ROOT, 'app', 'models')
+      files = Find.find(model_path) do |file|
+        next unless file[-3..-1] == '.rb'
+        next if file =~ /observer.rb/
+        file.gsub!(model_path,'')
         # Get the class from the filename
-        model = file.split('/').last[0..-4].classify.constantize
+        model = file.split('/').map{|f| f.gsub('.rb','').classify unless f.empty?}.compact.join('::').constantize
         # Skip classes that don't have any sitemap options
         next if !model.methods.include?('sitemap_options') || model.sitemap_options == nil
 
