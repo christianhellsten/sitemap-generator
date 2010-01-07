@@ -10,7 +10,7 @@ if !File.exist?(Options::CONFIG_FILE)
 end
 
 if !File.exist?(Options::XML_STYLESHEET)
-  File.cp(File.dirname(__FILE__) + "/gss.xsl", Options::XML_STYLESHEET)
+  File.cp!(File.dirname(__FILE__) + "/gss.xsl", Options::XML_STYLESHEET)
 end
 
 puts "SitemapGenerator installed."
