@@ -5,14 +5,6 @@ include ActionController::UrlWriter
 
 module SitemapGenerator
   class Generator
-
-    DEFAULT_OPTIONS = {
-      :order      => nil, 
-      :limit      => Options.limit, 
-      :priority   => Options.priority, 
-      :change_frequency => Options.change_frequency
-    }
-
     def initialize(filename = "#{RAILS_ROOT}/public/sitemap.xml")
       @filename = filename
       @old_size, @new_size = File.size(@filename) rescue 0
@@ -20,13 +12,15 @@ module SitemapGenerator
 
     def find_models
       models = []
-      model_path = File.join(RAILS_ROOT, 'app', 'models')
-      files = Find.find(model_path) do |file|
-        next unless file[-3..-1] == '.rb'
+      model_path = File.join(RAILS_ROOT, 'app', 'models', '/')
+      
+      # Find all Ruby files
+      Dir.glob(File.join(model_path, '**', '*.rb')) do |file|
         next if file =~ /observer.rb/
-        file.gsub!(model_path,'')
+        # Path should be relative to RAILS_ROOT 
+        file.gsub!(model_path, '')
         # Get the class from the filename
-        model = file.split('/').map{|f| f.gsub('.rb','').classify unless f.empty?}.compact.join('::').constantize
+        model = file.split('/').map{ |f| f.gsub('.rb', '').classify }.join('::').constantize
         # Skip classes that don't have any sitemap options
         next if !model.methods.include?('sitemap_options') || model.sitemap_options == nil
 
@@ -42,8 +36,13 @@ module SitemapGenerator
       # TODO rename data to sitemap
       self.generate do |data|
         self.find_models.each do |model|
-          # Use defaults
-          options = DEFAULT_OPTIONS.merge(model.sitemap_options)
+          # Default options
+          options = {
+            :limit      => Options.limit, 
+            :priority   => Options.priority, 
+            :change_frequency => Options.change_frequency
+          }
+          options = options.merge(model.sitemap_options)
 
           # A user defined block that handles sitemap generation
           custom_generator = options[:generator]
@@ -64,14 +63,19 @@ module SitemapGenerator
       # Find a column for ordering
       if options[:order] == nil
         order = ['updated_at', 'updated_on', 'created_at', 'created_on'].delete_if { |x| !model_columns.include?(x) }
-        options[:order] = "#{order.first} ASC"
+        options[:order] = "#{order.first} ASC" if !order.blank?
       end
 
-      puts "Sitemap #{model} #{options.inspect}"
+      puts "Sitemap options for '#{model}': #{options.inspect}"
+
+      find_options = {}
+      find_options[:order] = options[:order] if options.has_key?(:order)
+      find_options[:limit] = options[:limit] if options.has_key?(:limit)
 
       # This is where we create the sitemap. 
       # Find and add model instances to the sitemap
-      model.all(:order => options[:order], :limit => options[:limit]).each do |o|
+      # TODO paginate if we have millions of rows
+      model.all(find_options).each do |o|
         data.add o, options[:priority], options[:change_frequency]
       end
     end
@@ -89,13 +93,13 @@ module SitemapGenerator
 
       @new_size = File.size(@filename)
 
-      ping if ping?
+      ping #if ping?
 
       puts "Sitemap '#{@filename}' generated successfully."
     end
 
     def ping?
-      valid? && changed? && RAILS_ENV == 'production'
+      valid? && changed? #&& RAILS_ENV == 'production'
     end
 
     def changed?
@@ -106,7 +110,8 @@ module SitemapGenerator
     def valid?
       # TODO 1. Sitemap can contain a maximum of 50 000 entries
       # TODO 2. Sitemap should be valid XML
-      # TODO 3. Sitemap should be no more than x MB
+      # TODO 3. Sitemap should be no more than 10 MB
+      # TODO 4. Sitemap should contain no more than 1000 files
       
       true
     end

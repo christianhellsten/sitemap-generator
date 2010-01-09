@@ -1,0 +1,5 @@
+domain: aktagon.com
+
+limit: 5000
+priority: 1
+change_frequency: weekly
