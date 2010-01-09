@@ -80,7 +80,7 @@ module SitemapGenerator
 
       File.open(@filename, "w") do |file|  
         xml = Builder::XmlMarkup.new(:target => file, :indent => 2)  
-        xml.instruct! 'xml-stylesheet', {:href=>'gss.xsl', :type=>'text/xsl'}
+        xml.instruct! 'xml-stylesheet', {:href=>'sitemap.xsl', :type=>'text/xsl'}
 
         xml.urlset "xmlns" => "http://www.sitemaps.org/schemas/sitemap/0.9", "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation" => "http://www.google.com/schemas/sitemap/0.84 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" do  
           block.call(Sitemap.new(xml))

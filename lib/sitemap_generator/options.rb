@@ -1,7 +1,7 @@
 module SitemapGenerator
   class Options
     CONFIG_FILE = 'config/sitemap.yml'
-    XML_STYLESHEET = 'public/gss.xsl'
+    XML_STYLESHEET = 'public/sitemap.xsl'
     class << self
 
       def method_missing(name, *args)
