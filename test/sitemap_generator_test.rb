@@ -20,7 +20,7 @@ class SitemapGeneratorTest < Test::Unit::TestCase
       @model_path = File.join(RAILS_ROOT, 'app', 'models')
 
       generator = SitemapGenerator::Generator.new
-      generator.find_models.should == [Admin::Post, Post]
+      generator.find_models.should == [Admin::Post, Admin::Sales, Business, Post]
     end
 
     should "not allow sitemaps bigger than 10MB" do

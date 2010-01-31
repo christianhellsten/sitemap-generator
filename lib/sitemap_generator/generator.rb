@@ -93,7 +93,7 @@ module SitemapGenerator
 
       @new_size = File.size(@filename)
 
-      ping #if ping?
+      ping if ping?
 
       puts "Sitemap '#{@filename}' generated successfully."
     end
