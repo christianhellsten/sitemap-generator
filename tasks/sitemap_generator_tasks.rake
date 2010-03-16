@@ -4,8 +4,6 @@ namespace :sitemap do
 
   desc "Generates the sitemap"
   task :generate do
-    require(File.join(RAILS_ROOT, 'config', 'environment'))
-
     # Finds models and generates the sitemap
     SitemapGenerator::Generator.run 
     
