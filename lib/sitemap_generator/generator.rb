@@ -12,22 +12,29 @@ module SitemapGenerator
 
     def find_models
       models = []
-      model_path = File.join(RAILS_ROOT, 'app', 'models', '/')
-      
+
+      app_model_path = File.join(RAILS_ROOT, 'app', 'models', '/')
+      vendor_model_path = File.join(RAILS_ROOT, 'vendor', 'plugins', '**', 'app', 'models', '/')
+
+      files = []
+      [app_model_path, vendor_model_path].each do |path|
+        files += Dir.glob(File.join(path, '**', '*.rb'))
+      end
+
       # Find all Ruby files
-      Dir.glob(File.join(model_path, '**', '*.rb')) do |file|
+      files.each do |file|
         next if file =~ /observer.rb/
-        # Path should be relative to RAILS_ROOT 
-        file.gsub!(model_path, '')
+        # Remove path
+        file.gsub!(%r{.*/app/models/}, '')
         # Get the class from the filename
-        model = file.split('/').map{ |f| f.gsub('.rb', '').classify }.join('::').constantize
+        model = file.split('/').map{ |f| f.gsub('.rb', '').camelize }.join('::').constantize
         # Skip classes that don't have any sitemap options
         next if !model.methods.include?('sitemap_options') || model.sitemap_options == nil
 
         models << model
       end
 
-      puts "Sitemap WARNING!! No models found. Have you included a call to the sitemap in your ActiveRecord models?" if models.empty?
+      p "Sitemap WARNING!! No models found. Have you included a call to the sitemap in your ActiveRecord models?" if models.empty?
 
       models
     end
@@ -66,7 +73,7 @@ module SitemapGenerator
         options[:order] = "#{order.first} ASC" if !order.blank?
       end
 
-      puts "Sitemap options for '#{model}': #{options.inspect}"
+      p "Sitemap options for '#{model}': #{options.inspect}"
 
       find_options = {}
       find_options[:order] = options[:order] if options.has_key?(:order)
@@ -95,7 +102,7 @@ module SitemapGenerator
 
       ping if ping?
 
-      puts "Sitemap '#{@filename}' generated successfully."
+      p "Sitemap '#{@filename}' generated successfully."
     end
 
     def ping?
@@ -126,9 +133,9 @@ module SitemapGenerator
         "http://webmaster.live.com/ping.aspx?siteMap=http://#{Options.domain}/sitemap.xml" ].each do |url|
         open(url) do |f|
           if f.status[0] == "200"
-            puts "Sitemap successfully submitted to #{url}"      
+            p "Sitemap successfully submitted to #{url}"      
           else
-            puts "Failed to submit sitemap to #{url}"
+            p "Failed to submit sitemap to #{url}"
           end
         end
       end
