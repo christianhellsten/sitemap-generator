@@ -14,7 +14,7 @@ module SitemapGenerator
       models = []
 
       app_model_path = File.join(RAILS_ROOT, 'app', 'models', '/')
-      vendor_model_path = File.join(RAILS_ROOT, 'vendor', 'plugins', '**', 'app', 'models', '/')
+      vendor_model_path = File.join(RAILS_ROOT, 'vendor', 'plugins', '*', 'app', 'models', '/')
 
       files = []
       [app_model_path, vendor_model_path].each do |path|
@@ -24,14 +24,18 @@ module SitemapGenerator
       # Find all Ruby files
       files.each do |file|
         next if file =~ /observer.rb/
-        # Remove path
-        file.gsub!(%r{.*/app/models/}, '')
-        # Get the class from the filename
-        model = file.split('/').map{ |f| f.gsub('.rb', '').camelize }.join('::').constantize
-        # Skip classes that don't have any sitemap options
-        next if !model.methods.include?('sitemap_options') || model.sitemap_options == nil
+        begin
+          # Remove path
+          f = file.gsub(%r{.*/app/models/}, '')
+          # Get the class from the filename
+          model = f.split('/').map{ |f| f.gsub('.rb', '').camelize }.join('::').constantize
+          # Skip classes that don't have any sitemap options
+          next if !model.methods.include?('sitemap_options') || model.sitemap_options == nil
 
-        models << model
+          models << model
+        rescue Exception => e
+          p "Error processing model #{file}: #{e}"
+        end
       end
 
       p "Sitemap WARNING!! No models found. Have you included a call to the sitemap in your ActiveRecord models?" if models.empty?
