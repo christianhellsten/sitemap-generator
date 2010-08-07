@@ -104,9 +104,14 @@ module SitemapGenerator
 
       @new_size = File.size(@filename)
 
-      ping if ping?
+      if ping?
+        ping
+      elsif Options.ping == false
+        p "NOTE: pinging of search engines is disabled."
+      end
 
       p "Sitemap '#{@filename}' generated successfully."
+      p "NOTE: sitemap has not changed." if !changed?
     end
 
     def ping?

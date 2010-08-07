@@ -17,5 +17,5 @@ if !File.exist?(Options::XML_STYLESHEET)
   File.copy(File.join(File.dirname(__FILE__), "sitemap.xsl"), Options::XML_STYLESHEET)
 end
 
-puts "SitemapGenerator installed."
-puts "NOTE: You need to specify the domain of your application in #{Options::CONFIG_FILE}"
+p "SitemapGenerator installed."
+p "NOTE: You need to specify the domain of your application in #{Options::CONFIG_FILE}"
