@@ -1,3 +1,5 @@
+puts IO.read(File.join(File.dirname(__FILE__), 'INSTALL'))
+
 # Install hook code here
 require 'ftools'
 
