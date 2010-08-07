@@ -50,13 +50,21 @@ class SitemapGeneratorTest < Test::Unit::TestCase
       urls = [
         'http://search.yahooapis.com/SiteExplorerService/V1/ping?sitemap=http://aktagon.com/sitemap.xml',
         'http://www.google.com/webmasters/tools/ping?sitemap=http://aktagon.com/sitemap.xml',
-        'http://submissions.ask.com/ping?sitemap=http://aktagon.com/sitemap.xml',
-        'http://webmaster.live.com/ping.aspx?siteMap=http://aktagon.com/sitemap.xml'
+        'http://www.bing.com/webmaster/ping.aspx?siteMap=http://aktagon.com/sitemap.xml',
+        'http://submissions.ask.com/ping?sitemap=http://aktagon.com/sitemap.xml'
       ].each do |url|
         FakeWeb.register_uri(:get, url, :body => "")
       end
 
-      generator = SitemapGenerator::Generator.new.ping
+      generator = SitemapGenerator::Generator.new
+      generator.ping
+    end
+
+    should "should not ping if ping is disabled" do
+      generator = SitemapGenerator::Generator.new
+      generator.ping?.should == true
+      mock(SitemapGenerator::Options).ping.returns(false) 
+      generator.ping?.should == false
     end
   end
 end

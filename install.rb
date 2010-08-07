@@ -6,6 +6,7 @@ if !File.exist?(Options::CONFIG_FILE)
     file << "domain:                      # For example: 'aktagon.com'"
     file << "change_frequency: weekly"
     file << "limit: 5000"
+    file << "ping: true"
     file << "priority: 1.0"
   end
 end

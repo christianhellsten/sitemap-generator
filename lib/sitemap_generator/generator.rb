@@ -110,7 +110,8 @@ module SitemapGenerator
     end
 
     def ping?
-      valid? && changed? #&& RAILS_ENV == 'production'
+      return false if !Options.ping # || Rails.env != 'production'
+      valid? && changed? 
     end
 
     def changed?
@@ -131,10 +132,12 @@ module SitemapGenerator
       # Ping sites http://en.wikipedia.org/wiki/Sitemaps
       # TODO support other names than sitemap.xml?
 
-      [ "http://www.google.com/webmasters/tools/ping?sitemap=http://#{Options.domain}/sitemap.xml",
-        "http://search.yahooapis.com/SiteExplorerService/V1/ping?sitemap=http://#{Options.domain}/sitemap.xml",
-        "http://submissions.ask.com/ping?sitemap=http://#{Options.domain}/sitemap.xml",
-        "http://webmaster.live.com/ping.aspx?siteMap=http://#{Options.domain}/sitemap.xml" ].each do |url|
+      sitemap = "http://#{Options.domain}/sitemap.xml"
+
+      [ "http://www.google.com/webmasters/tools/ping?sitemap=#{sitemap}",
+        "http://search.yahooapis.com/SiteExplorerService/V1/ping?sitemap=#{sitemap}",
+        "http://submissions.ask.com/ping?sitemap=#{sitemap}",
+        "http://www.bing.com/webmaster/ping.aspx?siteMap=#{sitemap}" ].each do |url|
         open(url) do |f|
           if f.status[0] == "200"
             p "Sitemap successfully submitted to #{url}"      
