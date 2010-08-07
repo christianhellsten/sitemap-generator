@@ -1,7 +1,7 @@
 module SitemapGenerator
   class Options
-    CONFIG_FILE = File.join(RAILS_ROOT, 'config/sitemap.yml')
-    XML_STYLESHEET = File.join(RAILS_ROOT, 'public/sitemap.xsl')
+    CONFIG_FILE = File.join(Rails.root, 'config/sitemap.yml')
+    XML_STYLESHEET = File.join(Rails.root, 'public/sitemap.xsl')
 
     class << self
 
