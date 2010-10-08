@@ -35,6 +35,7 @@ Below is a sample configuration file, which also contains the default values for
   limit: 5000
   priority: 1
   change_frequency: weekly
+  ping: true
   </code>
 </pre>
 
@@ -44,6 +45,7 @@ The options:
 * limit: specifies how many model instances you want to include in the sitemap
 * priority: specifies the priority of the model
 * change_frequency: specifies how often the data changes: always, hourly, daily, weekly, monthly, yearly or never
+* ping: specifies whether the plugin should ping search engines or not
 
 You can find a more comprehensive description of these concepts on the "Wikipedia page on sitemaps":http://en.wikipedia.org/wiki/Sitemaps
 
@@ -153,6 +155,7 @@ SHELL=/bin/bash
 
 h2. Todo
 
+* Support for "video and image sitemaps":http://www.google.com/support/webmasters/bin/topic.py?hl=en&topic=20986
 * "Sitemap validation":http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=35738
 * gzip sitemap
 * gem

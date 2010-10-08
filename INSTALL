@@ -1,0 +1,17 @@
+= Configuration
+
+You need a configuration file, config/sitemap.yml, looking something like this:
+
+  domain: aktagon.com
+  limit: 5000
+  ping: true
+  priority: 1
+  change_frequency: weekly
+
+= Problems?
+
+Please report any issues here:
+http://github.com/christianhellsten/sitemap-generator/issues
+
+Thanks for using the plugin!
+
