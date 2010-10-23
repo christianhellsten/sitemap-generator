@@ -11,11 +11,9 @@ module SitemapGenerator
 end
 
 # need this for config.threadsafe!
-if Rails.env == 'production'
-  require File.join(Rails.root, 'config', 'environment')
-  require File.join(File.dirname(__FILE__), '/sitemap_generator/active_record')
-  require File.join(File.dirname(__FILE__), '/sitemap_generator/generator')
-  require File.join(File.dirname(__FILE__), '/sitemap_generator/helpers')
-  require File.join(File.dirname(__FILE__), '/sitemap_generator/options')
-  require File.join(File.dirname(__FILE__), '/sitemap_generator/sitemap')
-end
+require File.join(Rails.root, 'config', 'environment')
+require File.join(File.dirname(__FILE__), '/sitemap_generator/active_record')
+require File.join(File.dirname(__FILE__), '/sitemap_generator/generator')
+require File.join(File.dirname(__FILE__), '/sitemap_generator/helpers')
+require File.join(File.dirname(__FILE__), '/sitemap_generator/options')
+require File.join(File.dirname(__FILE__), '/sitemap_generator/sitemap')
