@@ -7,7 +7,10 @@ module SitemapGenerator
     include ActionView::Helpers::UrlHelper
     include ActionView::Helpers::DateHelper
     include ActionView::Helpers::TagHelper
-    include ActionView::Helpers::ActiveRecordHelper
+
+    def controller
+      @controller
+    end
 
     def w3c_date(date)
      date.utc.strftime("%Y-%m-%dT%H:%M:%S+00:00") if date
