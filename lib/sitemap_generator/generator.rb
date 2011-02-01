@@ -1,7 +1,7 @@
 require 'open-uri'
 require 'find'
 
-include ActionController::UrlWriter
+include Rails.application.routes.url_helpers
 
 module SitemapGenerator
   class Generator
