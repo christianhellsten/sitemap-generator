@@ -1,3 +1,6 @@
+Until we have time to improve this plugin, we recommend that you use this plugin:
+"https://github.com/alexrabarts/big_sitemap":https://github.com/alexrabarts/big_sitemap
+
 h1. Rails Sitemap Generator
 
 The Rails Sitemap Generator plugin makes it very easy to generate sitemaps for your Rails app.
