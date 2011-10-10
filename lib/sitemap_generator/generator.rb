@@ -5,7 +5,7 @@ include Rails.application.routes.url_helpers
 
 module SitemapGenerator
   class Generator
-    def initialize(filename = "#{RAILS_ROOT}/public/sitemap.xml")
+    def initialize(filename = Rails.root + "/public/sitemap.xml")
       @filename = filename
       @old_size, @new_size = File.size(@filename) rescue 0
     end
@@ -13,8 +13,8 @@ module SitemapGenerator
     def find_models
       models = []
 
-      app_model_path = File.join(RAILS_ROOT, 'app', 'models', '/')
-      vendor_model_path = File.join(RAILS_ROOT, 'vendor', 'plugins', '*', 'app', 'models', '/')
+      app_model_path = File.join(Rails.root , 'app', 'models', '/')
+      vendor_model_path = File.join(Rails.root , 'vendor', 'plugins', '*', 'app', 'models', '/')
 
       files = []
       [app_model_path, vendor_model_path].each do |path|
