@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'find'
+require 'generator'
 
 include Rails.application.routes.url_helpers
 
